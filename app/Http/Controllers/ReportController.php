@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Report;
+use Illuminate\Http\Request;
+
+class ReportController extends Controller
+{
+    public function index(){
+        $reports = Report::all(); 
+        return view('report.index', compact('reports'));
+    }
+
+    public function destroy(Report $report){
+    $report->delete();   // благодаря SoftDeletes это будет soft delete
+    return redirect()->route('reports.index')->with('success', 'Заявление удалено');
+    }
+}
