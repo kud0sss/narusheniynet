@@ -19,6 +19,24 @@
            class="inline-block bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-bold py-3 px-6 rounded mb-10 transition-colors">
             Создать заявление
         </a>
+        <div>
+            <span>Сортировка по дате создания: </span>
+            <a href="{{ route('reports.index', ['sort' => 'desc']) }}">сначала новые</a>
+            <a href="{{ route('reports.index', ['sort' => 'asc']) }}">сначала старые</a>
+        </div>
+
+        <div>
+            <p>Фильтрация по статусу заявки</p>
+            <ul>
+                @foreach($statuses as $status)
+                    <li>
+                        <a href="{{route('reports.index', ['status' => $status->id])}}">
+                            {{$status->name}}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($reports as $report)
@@ -32,6 +50,7 @@
                     <p class="text-gray-700 dark:text-gray-300 mb-5 line-clamp-4">
                         {{ $report->description }}
                     </p>
+                    <p>Статус: {{ $report->status->name ?? 'не указан' }}</p>
 
                     <div class="flex justify-end gap-5">
                         <a href="{{ route('reports.edit', $report) }}"
@@ -50,7 +69,7 @@
                 </div>
             @endforeach
         </div>
+        {{ $reports->links() }}
     </main>
-    
 </body>
 </html>
