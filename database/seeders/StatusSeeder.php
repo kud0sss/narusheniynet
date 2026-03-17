@@ -11,15 +11,9 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         DB::table('statuses')->insert([
-            [
-                'name' => 'новое'
-            ],
-            [
-                'name' => 'подтверждено'
-            ],
-            [
-                'name' => 'отклонено'
-            ]
+            ['name' => 'новое'],
+            ['name' => 'отклонено'],
+            ['name' => 'подтверждено'],
         ]);
     }
 }
