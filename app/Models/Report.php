@@ -11,8 +11,10 @@ class Report extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'number',          
+        'number',
         'description',
+        'user_id',
+        'status_id',
     ];
 
     public function status()

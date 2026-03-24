@@ -11,16 +11,12 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $sort = $request->input('sort');
-        if ($sort != 'asc' && $sort != 'desc') {
-            $sort = 'desc';
-        }
-
+        $sort = $request->input('sort', 'desc');
         $status = $request->input('status');
-        
-        $query = Report::where('user_id', Auth::user()->id);
 
-        if ($status && Status::where('id', $status)->exists()) {
+        $query = Report::where('user_id', Auth::id());
+
+        if ($status) {
             $query->where('status_id', $status);
         }
 
@@ -42,10 +38,11 @@ class ReportController extends Controller
             'description' => 'required|string',
         ]);
 
-        $data['user_id'] = Auth::user()->id;
-        $data['status_id'] = 1;
+        $data['user_id'] = Auth::id();
+        $data['status_id'] = 1;        
 
-        Report::create($data);
+        Report::create($data); 
+
         return redirect()->route('reports.index');
     }
 
@@ -85,5 +82,14 @@ class ReportController extends Controller
             return redirect()->route('reports.index');
         }
         abort(403);
+    }
+
+    public function statusUpdate(Request $request, Report $report)
+    {
+        $request->validate([
+            'status_id' => 'required|exists:statuses,id',
+        ]);
+        $report->update($request->only(['status_id']));
+        return redirect()->back();
     }
 }
