@@ -9,18 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class Admin
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            if (Auth::user()->isAdmin() === true) {
-                return $next($request);
-            }
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return $next($request);
         }
-        return redirect('login')->with('error', 'Авторизируйтесь под администратором');
+
+        return redirect('/login')->with('error', 'Access Denied');
     }
 }

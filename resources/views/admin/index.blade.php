@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ ('Административная панель') }}
+            {{ __('Административная панель') }}
         </h2>
     </x-slot>
 
@@ -21,24 +21,30 @@
                         <tbody>
                             @foreach($reports as $report)
                             <tr class="border-b">
-                                <td class="p-3">{{ $report->user->name }}</td>
+                                <td class="p-3">
+                                    {{ $report->user->lastname ?? '' }} {{ $report->user->name ?? '' }} {{ $report->user->middlename ?? '' }}
+                                </td>
+                                
                                 <td class="p-3">{{ $report->description }}</td>
                                 <td class="p-3">{{ $report->number }}</td>
+                                
                                 <td class="p-3">
-                                    @if($report->status->name == 'новое')
-                                        <form class="status-form" action="{{route('reports.status.update', $report->id)}}" method="POST">
+                                    @if($report->status && trim(mb_strtolower($report->status->name)) == 'новое')
+                                        <form class="status-form" action="{{ route('reports.status.update', $report->id) }}" method="POST">
                                             @method('patch')
                                             @csrf 
-                                            <select name="status_id" id="status_id">
+                                            <select name="status_id" id="status_id" class="rounded border-gray-300">
                                                 @foreach ($statuses as $status)
-                                                    <option value="{{ $status->id }}" {{ $status->id === $report->status_id ? 'selected' : ''}}>
+                                                    <option value="{{ $status->id }}" {{ $status->id === $report->status_id ? 'selected' : '' }}>
                                                         {{ $status->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </form>
                                     @else
-                                        {{ $report->status->name }}
+                                        <span class="font-semibold {{ ($report->status?->name == 'подтверждено') ? 'text-green-600' : 'text-red-600' }}">
+                                            {{ $report->status?->name }}
+                                        </span>
                                     @endif
                                 </td>
                             </tr>

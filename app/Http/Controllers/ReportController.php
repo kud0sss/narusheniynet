@@ -39,7 +39,7 @@ class ReportController extends Controller
         ]);
 
         $data['user_id'] = Auth::id();
-        $data['status_id'] = 1;        
+        $data['status_id'] = 1;      
 
         Report::create($data); 
 
@@ -48,7 +48,7 @@ class ReportController extends Controller
 
     public function show(Report $report)
     {
-        if (Auth::user()->id === $report->user_id) {
+        if (Auth::id() === $report->user_id) {
             return view('reports.show', compact('report'));
         }
         abort(403);
@@ -56,7 +56,7 @@ class ReportController extends Controller
 
     public function edit(Report $report)
     {
-        if (Auth::user()->id === $report->user_id) {
+        if (Auth::id() === $report->user_id) {
             return view('reports.edit', compact('report'));
         }
         abort(403);
@@ -64,7 +64,7 @@ class ReportController extends Controller
 
     public function update(Request $request, Report $report)
     {
-        if (Auth::user()->id === $report->user_id) {
+        if (Auth::id() === $report->user_id) {
             $data = $request->validate([
                 'number' => 'required|string',
                 'description' => 'required|string',
@@ -77,7 +77,7 @@ class ReportController extends Controller
 
     public function destroy(Report $report)
     {
-        if (Auth::user()->id === $report->user_id) {
+        if (Auth::id() === $report->user_id) {
             $report->delete();
             return redirect()->route('reports.index');
         }
@@ -89,7 +89,9 @@ class ReportController extends Controller
         $request->validate([
             'status_id' => 'required|exists:statuses,id',
         ]);
+
         $report->update($request->only(['status_id']));
-        return redirect()->back();
+        
+        return redirect()->back()->with('success', 'Статус обновлен');
     }
 }

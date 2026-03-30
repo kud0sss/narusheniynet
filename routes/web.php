@@ -3,17 +3,16 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
-use App\Http\Middleware\Admin;
 use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware((Admin::class))->group(function(){
-    Route::get('/admin', [AdminController::class,'index'])->name('admin.index');
-    Route::patch('/reports/status/{report}/',[ReportController::class, 'statusUpdate'])
-                ->name('reports.status.update');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::patch('/reports/status/{report}', [ReportController::class, 'statusUpdate'])
+          ->name('reports.status.update');
 });
 
 Route::get('/dashboard', function () {
