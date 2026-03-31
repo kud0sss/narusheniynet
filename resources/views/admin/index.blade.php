@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Административная панель') }}
+            {{ 'Административная панель' }}
         </h2>
     </x-slot>
 
@@ -42,7 +42,7 @@
                                             </select>
                                         </form>
                                     @else
-                                        <span class="font-semibold {{ ($report->status?->name == 'подтверждено') ? 'text-green-600' : 'text-red-600' }}">
+                                        <span>
                                             {{ $report->status?->name }}
                                         </span>
                                     @endif
