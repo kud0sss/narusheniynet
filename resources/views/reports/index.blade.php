@@ -24,7 +24,7 @@
                                     {{ $report->description }}
                                 </p>
 
-                                <x-status :type="mb_strtolower($report->status->name)">
+                                <x-status :type="($report->status->name)">
                                     {{ $report->status->name }}
                                 </x-status>
 
