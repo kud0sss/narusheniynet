@@ -6,6 +6,8 @@ use App\Models\Report;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ReportController extends Controller
 {
@@ -31,7 +33,7 @@ class ReportController extends Controller
         return view('reports.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request) : RedirectResponse
     {
         $data = $request->validate([
             'number' => 'required|string',
@@ -43,7 +45,7 @@ class ReportController extends Controller
 
         Report::create($data); 
 
-        return redirect()->route('reports.index');
+        return redirect()->route('reports.index')->with('info', 'Заявление отправлено');
     }
 
     public function show(Report $report)

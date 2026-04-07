@@ -15,22 +15,29 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen flex flex-col bg-gray-100">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
+            @if (isset($header))
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
-            @endisset
+            @endif
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="flex-grow">
+                <div class="max-w-[3000px] mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                    @include('layouts.flash-messages')
+                    {{ $slot }}
+                </div>
             </main>
+
+            <footer class="bg-white border-t border-gray-200 py-6">
+                <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+                    &copy; 2026 Нарушениям.Нет — Портал сознательных граждан
+                </div>
+            </footer>
         </div>
     </body>
 </html>

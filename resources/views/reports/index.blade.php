@@ -13,9 +13,9 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($reports as $report)
-                            <div class="bg-white border border-gray-200 rounded-lg shadow p-6 transition-colors hover:shadow-md">
+                            <div class="bg-white border border-gray-200 p-4 md:p-6 rounded-lg shadow p-6 transition-colors hover:shadow-md">
                                 <div class="text-sm text-gray-500 mb-1">
-                                    <strong>{{ $report->created_at }}</strong>
+                                    <strong>{{\Carbon\Carbon::parse($report->created_at)->translatedFormat('j F Y h:i');}}</strong>
                                 </div>
                                 <div class="font-bold text-xl text-blue-900 mb-3">
                                     {{ $report->number }}

@@ -15,6 +15,6 @@ class Admin
             return $next($request);
         }
 
-        return redirect('/login')->with('error', 'Access Denied');
+        return redirect('/login')->with('error', 'Авторизируйтесь под администратором');
     }
 }
