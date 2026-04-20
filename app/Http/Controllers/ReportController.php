@@ -45,7 +45,7 @@ class ReportController extends Controller
 
         Report::create($data); 
 
-        return redirect()->route('reports.index')->with('info', 'Заявление отправлено');
+        return redirect()->route('dashboard')->with('success', 'Заявление успешно сформировано');
     }
 
     public function show(Report $report)

@@ -20,9 +20,8 @@
                     <x-application-logo class="w-20 h-20 fill-current text-blue-600" />
                 </a>
             </div>
-            <div class="w-full px-4 sm:max-w-md md:max-w-lg mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg border border-gray-200">
+            <div class="w-full max-w-7xl mt-6 px-10 py-12 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 @include('layouts.flash-messages')
-
                 {{ $slot }}
             </div>
         </div>

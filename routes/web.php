@@ -19,8 +19,8 @@ Route::get('/second', function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-    Route::patch('/reports/status/{report}', [ReportController::class, 'statusUpdate'])
-          ->name('reports.status.update');
+    Route::put('/admin/reports/{report}', [AdminController::class, 'update'])
+            ->name('admin.reports.update');
 });
 
 Route::get('/dashboard', function () {
@@ -40,6 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
     Route::put('/reports/{report}', [ReportController::class, 'update'])->name('reports.update');
     Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
+});
+
+Route::get('/test404', function () {
+    return view('errors.404');
 });
 
 require __DIR__.'/auth.php';

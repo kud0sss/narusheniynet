@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class Admin
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        if (auth()->user() && auth()->user()->role_id == 2) {
             return $next($request);
         }
 
-        return redirect('/login')->with('error', 'Авторизируйтесь под администратором');
+        return redirect('/dashboard')->with('error', 'У вас нет прав администратора для доступа к этой странице');
     }
 }
