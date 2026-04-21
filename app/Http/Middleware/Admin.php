@@ -11,10 +11,10 @@ class Admin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user() && auth()->user()->role_id == 2) {
+        if (auth()->check() && auth()->user()->role === 'admin') { 
             return $next($request);
         }
 
-        return redirect('/dashboard')->with('error', 'У вас нет прав администратора для доступа к этой странице');
+        return redirect('/dashboard')->with('error', 'У вас нет прав администратора');
     }
 }

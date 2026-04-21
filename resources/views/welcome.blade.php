@@ -1,49 +1,58 @@
 <x-guest-layout>
+    {{-- Обязательное подключение стилей --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <div class="py-16">
-        <div class="max-w-[1400px] mx-auto px-8">
-            <div class="flex flex-col lg:flex-row items-start justify-between gap-16">
-                
-                <div class="w-full lg:w-2/3">
 
-                    <h1 class="text-5xl md:text-7xl font-black text-slate-900 leading-[1.0] mb-8 uppercase">
-                        СДЕЛАЕМ ДОРОГИ <br>
-                        <span class="text-[#2563eb]">БЕЗОПАСНЕЕ</span>
-                    </h1>
-
-                    <p class="text-2xl text-slate-500 mb-12 max-w-2xl leading-relaxed">
-                        Официальный портал фиксации нарушений ПДД. 
-                        Вместе мы сделаем наши улицы лучше.
-                    </p>
-
-                    <div class="flex flex-wrap items-center gap-6 mt-10">
-                        @if (Route::has('login'))
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="px-10 py-5 bg-black text-white text-xl font-bold rounded-2xl hover:bg-[#2563eb] transition shadow-xl">
-                                    ЛИЧНЫЙ КАБИНЕТ
-                                </a>
-                            @else
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="px-10 py-5 bg-[#2563eb] text-white text-xl font-black rounded-2xl hover:bg-black transition-all shadow-2xl shadow-blue-200 uppercase tracking-wide">
-                                        РЕГИСТРАЦИЯ
-                                    </a>
-                                @endif
-
-                                <a href="{{ route('login') }}" class="px-8 py-5 text-xl font-bold text-slate-700 hover:text-[#2563eb] transition uppercase">
-                                    ВОЙТИ
-                                </a>
-                            @endauth
-                        @endif
-                    </div>
-                </div>
-
-                <div class="hidden lg:block lg:w-1/3"></div>
-
-            </div>
-        </div>
+    <div class="min-h-[85vh] flex flex-col justify-between">
         
-        <div class="max-w-[1400px] mx-auto px-8 mt-24 pt-10 border-t border-slate-100 flex justify-between items-center text-slate-400 font-medium uppercase text-xs tracking-widest">
-            <div>© 2026 ИС Нарушений.нет</div>
-        </div>
+        <header class="flex justify-between items-center w-full py-6 border-b border-gray-100">
+            <div class="whitespace-nowrap">
+                <span class="text-3xl font-black uppercase tracking-tighter">
+                    <span class="text-[#dc2626]">НАРУШЕНИЙ</span><span class="text-black">.</span><span class="text-[#2563eb]">НЕТ</span>
+                </span>
+            </div>
+
+            <div class="flex items-center gap-8">
+                @if (Route::has('login'))
+                    @auth
+                        <a href="{{ url('/dashboard') }}" class="text-sm font-bold text-gray-700 hover:text-[#2563eb] uppercase tracking-widest">Панель управления</a>
+                    @else
+                        <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-[#2563eb] uppercase tracking-widest">Войти</a>
+                        
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="bg-[#2563eb] text-white px-8 py-3 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-black transition shadow-lg">
+                                Регистрация
+                            </a>
+                        @endif
+                    @endauth
+                @endif
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center">
+            <div class="w-full">
+                <h1 class="text-6xl md:text-8xl font-black text-slate-900 leading-[1.1] uppercase">
+                    Сделаем дороги <br>
+                    <span class="text-[#2563eb]">безопаснее</span>
+                </h1>
+                
+                <p class="mt-8 text-2xl text-slate-500 max-w-2xl leading-relaxed font-medium">
+                    Официальная информационная система мониторинга <br> 
+                    и фиксации правонарушений ПДД.
+                </p>
+            </div>
+        </main>
+
+        <footer class="py-10 border-t border-gray-100 flex justify-between items-center">
+            <div class="text-gray-400 text-sm font-medium uppercase tracking-widest">
+                © 2026 Нарушений.нет — Все права защищены
+            </div>
+            
+            <div class="flex gap-8 font-black uppercase text-[11px] tracking-[0.3em]">
+                <span class="text-[#dc2626]">Скорость</span>
+                <span class="text-black">Закон</span>
+                <span class="text-[#2563eb]">Порядок</span>
+            </div>
+        </footer>
+
     </div>
 </x-guest-layout>

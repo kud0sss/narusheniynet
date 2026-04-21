@@ -28,6 +28,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if ($request->user()->role === 'admin') {
+            return redirect()->intended(route('admin.index'))->with('succes', 'Вы вошли как администратор');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false))->with('succes', 'Вы вошли в систему');
     }
 

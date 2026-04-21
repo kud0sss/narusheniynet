@@ -6,8 +6,6 @@ use App\Models\Report;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ReportController extends Controller
 {
@@ -16,13 +14,20 @@ class ReportController extends Controller
         $sort = $request->input('sort', 'desc');
         $status = $request->input('status');
 
-        $query = Report::where('user_id', Auth::id());
+        $query = Report::query();
 
-        if ($status) {
+        if (Auth::user()->role !== 'admin') {
+            $query->where('user_id', Auth::id());
+        }
+
+        if ($request->filled('status')) {
             $query->where('status_id', $status);
         }
 
-        $reports = $query->orderBy('created_at', $sort)->paginate(9);
+        $reports = $query->orderBy('created_at', $sort)
+                         ->paginate(9)
+                         ->withQueryString();
+
         $statuses = Status::all();
 
         return view('reports.index', compact('reports', 'statuses', 'sort', 'status'));
@@ -33,67 +38,64 @@ class ReportController extends Controller
         return view('reports.create');
     }
 
-    public function store(Request $request) : RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validate([
-            'number' => 'required|string',
+        $request->validate([
+            'number' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
 
-        $data['user_id'] = Auth::id();
-        $data['status_id'] = 1;      
+        Report::create([
+            'number' => $request->number,
+            'description' => $request->description,
+            'user_id' => Auth::id(),
+            'status_id' => 1,
+        ]);
 
-        Report::create($data); 
-
-        return redirect()->route('dashboard')->with('success', 'Заявление успешно сформировано');
-    }
-
-    public function show(Report $report)
-    {
-        if (Auth::id() === $report->user_id) {
-            return view('reports.show', compact('report'));
-        }
-        abort(403);
+        return redirect()->route('reports.index');
     }
 
     public function edit(Report $report)
     {
-        if (Auth::id() === $report->user_id) {
-            return view('reports.edit', compact('report'));
+        if (Auth::user()->role !== 'admin' && $report->user_id !== Auth::id()) {
+            abort(403);
         }
-        abort(403);
+
+        return view('reports.edit', compact('report'));
     }
 
     public function update(Request $request, Report $report)
     {
-        if (Auth::id() === $report->user_id) {
-            $data = $request->validate([
-                'number' => 'required|string',
-                'description' => 'required|string',
-            ]);
-            $report->update($data);
-            return redirect()->route('reports.index');
+        if (Auth::user()->role !== 'admin' && $report->user_id !== Auth::id()) {
+            abort(403);
         }
-        abort(403);
+
+        $request->validate([
+            'number' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        $report->update($request->only('number', 'description'));
+
+        return redirect()->route('reports.index');
     }
 
     public function destroy(Report $report)
     {
-        if (Auth::id() === $report->user_id) {
-            $report->delete();
-            return redirect()->route('reports.index');
+        if (Auth::user()->role !== 'admin' && $report->user_id !== Auth::id()) {
+            abort(403);
         }
-        abort(403);
+
+        $report->delete();
+
+        return redirect()->route('reports.index');
     }
 
-    public function statusUpdate(Request $request, Report $report)
+    public function show(Report $report)
     {
-        $request->validate([
-            'status_id' => 'required|exists:statuses,id',
-        ]);
-
-        $report->update($request->only(['status_id']));
-        
-        return redirect()->back()->with('success', 'Статус обновлен');
+        if (Auth::user()->role !== 'admin' && $report->user_id !== Auth::id()) {
+            abort(403);
+        }
+        return view('reports.show', compact('report'));
     }
 }

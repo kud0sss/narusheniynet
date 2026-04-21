@@ -1,49 +1,35 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index', function () {
-    return view('index');
+Route::get('/test404', function () {
+    return view('errors.404');
 });
 
-Route::get('/second', function () {
-    return view('second');
-});
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    Route::get('/dashboard', function () {
+        return redirect()->route('reports.index');
+    })->name('dashboard');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-    Route::put('/admin/reports/{report}', [AdminController::class, 'update'])
-            ->name('admin.reports.update');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::middleware('auth')->group(function () {
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
-    Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
-    Route::get('/reports/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
-    Route::put('/reports/{report}', [ReportController::class, 'update'])->name('reports.update');
-    Route::delete('/reports/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
-});
-
-Route::get('/test404', function () {
-    return view('errors.404');
+    Route::resource('reports', ReportController::class);
+    
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::put('/admin/reports/{report}', [AdminController::class, 'update'])
+            ->name('admin.reports.update');
+    });
 });
 
 require __DIR__.'/auth.php';
