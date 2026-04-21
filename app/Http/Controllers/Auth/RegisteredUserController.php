@@ -48,11 +48,15 @@ class RegisteredUserController extends Controller
             'tel' => $request->tel,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => User::ROLE_USER, 
         ]);
 
         event(new Registered($user));
+
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        session()->flash('success', 'Вы успешно зарегистрировались в системе!');
+
+        return redirect()->route('dashboard');
     }
 }

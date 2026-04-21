@@ -14,17 +14,11 @@ Route::get('/test404', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    
-    Route::get('/dashboard', function () {
-        return redirect()->route('reports.index');
-    })->name('dashboard');
-
+    Route::get('/dashboard', [ReportController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::resource('reports', ReportController::class);
-    
     Route::middleware(['admin'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::put('/admin/reports/{report}', [AdminController::class, 'update'])

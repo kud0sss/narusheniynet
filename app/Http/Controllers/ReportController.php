@@ -41,18 +41,19 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'number' => 'required|string|max:255',
-            'description' => 'required|string',
+            'number' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
         ]);
 
         Report::create([
             'number' => $request->number,
             'description' => $request->description,
             'user_id' => Auth::id(),
-            'status_id' => 1,
+            'status_id' => 1, // 'новое'
         ]);
 
-        return redirect()->route('reports.index');
+        return redirect()->route('dashboard')
+            ->with('success', 'Ваше заявление успешно создано!');
     }
 
     public function edit(Report $report)
@@ -60,7 +61,6 @@ class ReportController extends Controller
         if (Auth::user()->role !== 'admin' && $report->user_id !== Auth::id()) {
             abort(403);
         }
-
         return view('reports.edit', compact('report'));
     }
 
@@ -77,7 +77,7 @@ class ReportController extends Controller
 
         $report->update($request->only('number', 'description'));
 
-        return redirect()->route('reports.index');
+        return redirect()->route('reports.index')->with('success', 'Данные обновлены');
     }
 
     public function destroy(Report $report)
@@ -88,7 +88,7 @@ class ReportController extends Controller
 
         $report->delete();
 
-        return redirect()->route('reports.index');
+        return redirect()->route('reports.index')->with('success', 'Заявление удалено');
     }
 
     public function show(Report $report)
