@@ -37,21 +37,18 @@
         @forelse($reports as $report)
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col h-full group overflow-hidden">
                 
-                {{-- ДОБАВЛЕНО: Блок с фото (Этап 5 задания) --}}
-                <div class="h-48 w-full bg-slate-50 border-b border-slate-100 relative overflow-hidden">
-                    @if($report->path_img)
-                        <img src="{{ asset('storage/' . $report->path_img) }}" 
-                             alt="Фото нарушения" 
-                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                    @else
-                        <div class="flex flex-col items-center justify-center h-full text-slate-300">
-                            <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span class="text-[10px] font-black uppercase tracking-widest">Фото отсутствует</span>
-                        </div>
-                    @endif
-                </div>
+                {{-- ВЫВОД ИЗОБРАЖЕНИЯ --}}
+                @if($report->report_image)
+                    <div class="w-full h-48 overflow-hidden bg-slate-100 border-b border-slate-100">
+                        <img src="{{ asset('storage/' . $report->report_image) }}" alt="Фото нарушения" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                @else
+                    <div class="w-full h-48 bg-slate-50 flex items-center justify-center border-b border-slate-100">
+                        <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                @endif
 
                 <div class="p-6 flex flex-col justify-between flex-1">
                     <div>
@@ -91,7 +88,7 @@
                         <form action="{{ route('reports.destroy', $report) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95">
+                            <button type="submit" class="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95" onclick="return confirm('Удалить заявление?')">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
